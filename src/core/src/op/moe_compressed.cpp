@@ -24,7 +24,9 @@ void MOECompressed::set_config(const Config& config) {
 
 std::shared_ptr<ov::Node> MOECompressed::clone_with_new_inputs(const ov::OutputVector& new_args) const {
     OV_OP_SCOPE(internal_MOECompressed_clone_with_new_inputs);
-    check_new_args_count(this, new_args);
+    if (new_args.size() != 12 && new_args.size() != 22) {
+        check_new_args_count(this, new_args);
+    }
 
     return std::make_shared<MOECompressed>(new_args, m_config);
 }

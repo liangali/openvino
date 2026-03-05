@@ -59,6 +59,28 @@ public:
     ///   shape [num_experts, hidden_size, group_num, 1]
     ///   11: w2_zp - expert zp for final projection for compressed experts,
     ///   shape [num_experts, hidden_size, group_num, 1]
+    ///
+    ///   Optional inputs for Shared Expert:
+    ///   12: shared_gate_weight - shared expert weights for first projection,
+    ///   shape [1, inter_size, group_num, group_size]
+    ///   13: shared_gate_scale - shared expert scale for first projection,
+    ///   shape [1, inter_size, group_num, 1]
+    ///   14: shared_gate_zp - shared expert zp for first projection,
+    ///   shape [1, inter_size, group_num, 1]
+    ///   15: shared_up_weight - shared expert weights for second projection,
+    ///   shape [1, inter_size, group_num, group_size]
+    ///   16: shared_up_scale - shared expert scale for second projection,
+    ///   shape [1, inter_size, group_num, 1]
+    ///   17: shared_up_zp - shared expert zp for second projection,
+    ///   shape [1, inter_size, group_num, 1]
+    ///   18: shared_down_weight - shared expert weights for final projection,
+    ///   shape [1, hidden_size, group_num, group_size]
+    ///   19: shared_down_scale - shared expert scale for final projection,
+    ///   shape [1, hidden_size, group_num, 1]
+    ///   20: shared_down_zp - shared expert zp for final projection,
+    ///   shape [1, hidden_size, group_num, 1]
+    ///   21: shared_gate_gate_weight - shared expert gate weight for gating,
+    ///   shape [hidden_size]
     /// \param config Configuration for the MOE operation
     MOECompressed(const OutputVector& args, const Config& config);
 
