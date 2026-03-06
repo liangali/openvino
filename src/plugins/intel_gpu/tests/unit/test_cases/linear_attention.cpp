@@ -83,12 +83,12 @@ struct linear_attention_gpu_test : public ::testing::TestWithParam<linear_attent
     void l2norm(float* a, size_t n) {
         float eps = 0.000001;
         float sum = 0.0f;
-        for (int j = 0; j < n; j++) {
+        for (size_t j = 0; j < n; j++) {
             sum += a[j] * a[j];
         }
         sum += eps;
         sum = 1 / sqrt(sum);
-        for (int j = 0; j < n; j++) {
+        for (size_t j = 0; j < n; j++) {
             a[j] = a[j] * sum;
         }
     }
@@ -129,7 +129,7 @@ struct linear_attention_gpu_test : public ::testing::TestWithParam<linear_attent
                         float b_beta = beta[i_b * G_B_STRIDE + i * this->H + i_h];
                         b_g = exp(b_g);
                         // TODO SCALE
-                        for (int j = 0; j < this->K; j++) {
+                        for (size_t j = 0; j < this->K; j++) {
                             b_k[j] = k_ptr[i * this->K * this->H + j];
                             b_q[j] = q_ptr[i * this->K * this->H + j];
                         }

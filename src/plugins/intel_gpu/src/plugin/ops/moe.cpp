@@ -9,8 +9,7 @@
 #include <intel_gpu/primitives/swiglu.hpp>
 #include <limits>
 
-#include "intel_gpu/op/moe_3gemm_fused_compressed.hpp"
-#include "intel_gpu/op/moe_compressed.hpp"
+#include "openvino/op/moe_compressed.hpp"
 #include "intel_gpu/plugin/common_utils.hpp"
 #include "intel_gpu/plugin/program_builder.hpp"
 #include "intel_gpu/primitives/moe_3gemm_fused_compressed.hpp"

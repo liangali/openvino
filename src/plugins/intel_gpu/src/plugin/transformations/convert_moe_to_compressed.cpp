@@ -275,7 +275,7 @@ ConvertMOEToMOECompressed::ConvertMOEToMOECompressed(bool is_pa) {
                     args[20] = pattern_map.at(gemm3_zp_m_shared_down);
                 }
             }
-            ov::intel_gpu::op::MOECompressed::Config config(moe->get_config());
+            ov::op::internal::MOECompressed::Config config(moe->get_config());
             config.hidden_size = group_compressed ? weight_shape[2] * weight_shape[3] : weight_shape[2];
             config.inter_size = weight_shape[1];
             config.num_expert = weight_shape[0];

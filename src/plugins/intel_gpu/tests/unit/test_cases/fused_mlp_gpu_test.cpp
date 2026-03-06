@@ -142,7 +142,7 @@ TEST(fused_mlp_onednn_graph_gpu, smoke_fp16) {
     auto y = matmul(hidden, w_down_f, mb, oc, ic);
 
     for (size_t i = 0; i < y.size(); ++i) {
-        printf("FusedMLP ULT result: i = %d, gpu = %f, ref = %f\n", i, static_cast<float>(out_ptr[i]), y[i]);
+        printf("FusedMLP ULT result: i = %ld, gpu = %f, ref = %f\n", i, static_cast<float>(out_ptr[i]), y[i]);
         EXPECT_NEAR(static_cast<float>(out_ptr[i]), y[i], 5e-2f);
     }
 }

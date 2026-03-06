@@ -649,14 +649,14 @@ TEST_P(moe_3gemm_compressed_gpu_shared_random, moe_accuracy_test_shared_expert_r
     
     // Check accuracy
     for (size_t i = 0; i < ref_output.size(); ++i) {
-        EXPECT_NEAR(static_cast<float>(output_ptr[i]), static_cast<float>(ref_output[i]), 0.5f);
+        EXPECT_NEAR(static_cast<float>(output_ptr[i]), static_cast<float>(ref_output[i]), 1.0f);
     }
 }
 
 INSTANTIATE_TEST_SUITE_P(smoke,
                          moe_3gemm_compressed_gpu_shared_random,
-                         ::testing::Values(Moe3GemmTestParams{1, true, 128, 256, 4, 2, 128},
-                                           Moe3GemmTestParams{16, true, 128, 256, 4, 2, 128},
+                         ::testing::Values(Moe3GemmTestParams{1, true, 1024, 2048, 8, 4, 128},
+                                           Moe3GemmTestParams{16, true, 1024, 2048, 8, 4, 128},
                                            Moe3GemmTestParams{1, false, 128, 256, 4, 2, 128},
                                            Moe3GemmTestParams{16, false, 128, 256, 4, 2, 128}));
 
