@@ -24,7 +24,9 @@ void MOECompressed::set_config(const Config& config) {
 
 std::shared_ptr<ov::Node> MOECompressed::clone_with_new_inputs(const ov::OutputVector& new_args) const {
     OV_OP_SCOPE(internal_MOECompressed_clone_with_new_inputs);
-    check_new_args_count(this, new_args);
+    if (new_args.size() != 12 && new_args.size() != 22) {
+        check_new_args_count(this, new_args);
+    }
 
     return std::make_shared<MOECompressed>(new_args, m_config);
 }
@@ -42,6 +44,7 @@ bool MOECompressed::visit_attributes(ov::AttributeVisitor& visitor) {
     visitor.on_attribute("hidden_size", m_config.hidden_size);
     visitor.on_attribute("inter_size", m_config.inter_size);
     visitor.on_attribute("num_expert", m_config.num_expert);
+    visitor.on_attribute("num_shared_expert", m_config.num_shared_expert);
     visitor.on_attribute("top_k", m_config.top_k);
     visitor.on_attribute("group_size", m_config.group_size);
     visitor.on_attribute("out_type", m_config.out_type);

@@ -17,7 +17,9 @@ MOE3GemmFusedCompressed::MOE3GemmFusedCompressed(const OutputVector& args, const
 
 std::shared_ptr<ov::Node> MOE3GemmFusedCompressed::clone_with_new_inputs(const ov::OutputVector& new_args) const {
     OV_OP_SCOPE(internal_MOE3GemmFusedCompressed_clone_with_new_inputs);
-    check_new_args_count(this, new_args);
+    if (new_args.size() != 11 && new_args.size() != 21) {
+        check_new_args_count(this, new_args);
+    }
 
     return std::make_shared<MOE3GemmFusedCompressed>(new_args, get_config());
 }
