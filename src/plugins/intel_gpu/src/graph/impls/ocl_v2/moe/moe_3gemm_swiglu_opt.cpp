@@ -1173,8 +1173,17 @@ public:
         internal_buffers.emplace_back(layout_topk_id, true);       // 0: topk_id
         internal_buffers.emplace_back(layout_topk_weights, true);  // 1: topk_weights
 
-        // To support micro_gemm, prefill need to allocate max_topk * token_num for input data of micro_gemm
-        auto max_batch = has_shared_expert ? (max_topk + 1) * token_num : max_topk * token_num;
+        // For single-token decode (token_num==1 with SE), exec_single_token() dispatches
+        // compute_experts = max_topk+1 OCL kernels all writing to scratch.up, so we need
+        // at least max_topk+1 rows.  For prefill (token_num>1 with SE), execute_shared_expert()
+        // runs via oneDNN using scratch.up[0:T,:] which is within the max_topk*T allocation —
+        // no extra slot is needed.
+        // std::max(max_topk+1, max_topk*token_num) covers both cases:
+        //   token_num==1 → max(topk+1, topk)  = topk+1
+        //   token_num>=2 → max(topk+1, topk*T) = topk*T  (since topk*T >= 2*topk > topk+1 for topk>=2)
+        auto max_batch = has_shared_expert
+            ? std::max(max_topk + 1, max_topk * token_num)
+            : max_topk * token_num;
         layout layout_gateup_out(ov::Shape{max_batch, static_cast<size_t>(config.inter_size)}, data_type, cldnn::format::bfyx);
         layout layout_down_out(ov::Shape{max_batch, static_cast<size_t>(config.hidden_size)}, data_type, cldnn::format::bfyx);
         internal_buffers.emplace_back(layout_gateup_out, true);  // 2: up output
@@ -1512,8 +1521,9 @@ public:
         auto batch_mem_ptr = scratch.topk_id;
         auto [hidden_states_mem_ptr, hidden_states_layout] = get_input_info(instance, static_cast<size_t>(MOE3GemmInputIndex::HIDDEN_STATES));
         auto routing_mem_ptr = scratch.topk_weights;
-        auto input_layout = instance.input_memory_ptr(static_cast<size_t>(MOE3GemmInputIndex::HIDDEN_STATES))->get_layout();
-        auto token_num = get_seq_len(input_layout);
+        // auto input_layout = instance.input_memory_ptr(static_cast<size_t>(MOE3GemmInputIndex::HIDDEN_STATES))->get_layout();
+        // auto token_num = get_seq_len(input_layout);
+        auto token_num = get_seq_len(hidden_states_layout);
 
         _hidden_size = static_cast<int>(cur_moe->_config.hidden_size);
         _intermediate_size = static_cast<int>(cur_moe->_config.inter_size);
